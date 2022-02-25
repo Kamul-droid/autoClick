@@ -1,0 +1,2 @@
+# autoClick
+ a robot clicker
