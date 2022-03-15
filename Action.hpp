@@ -14,18 +14,24 @@ private:
     static int instanceCount;
     double posX;
     double posY;
-    int timeToWait{0},time{0};
-    string buttonClick="B", name="task";
+    int timeToWait,time;
+    string buttonClick, name;
    
 protected:
 
 public:
+    
     void leftClick(double x, double y, int time);
     void rightClick(double x, double y, int time);
     void display();
     //Action(const Action &other);
     void setName(string newName);
     const string& getName();
+    const string& getButton();
+    const double& getPosX();
+    const double& getPosY();
+    const int& getTime();
+    const int& getWaitTime();
     void setTime(int time);
     void setWaitTime(int time);
     static void waitTime(int time);

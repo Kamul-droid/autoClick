@@ -1,4 +1,4 @@
-#include<Windows.h>
+#include<windows.h>
 #include <winuser.h>
 #include <iostream>
 #include <vector>
@@ -81,18 +81,18 @@ int main(int argc, char const *argv[])
     rightClick(200,200);
     Sleep(500);
     leftClick(350,275);
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-                switch (event.type) {
-                    case sf::Event::MouseButtonPressed:
-                cout << "Button " << event.mouseButton.button << " @ "
-                            << sf::Mouse::getPosition(window).x << ", "
-                            << sf::Mouse::getPosition(window).y << "\n";
-                break;
-            }
-        }
-    }
+    // while (window.isOpen()) {
+    //     sf::Event event;
+    //     while (window.pollEvent(event)) {
+    //             switch (event.type) {
+    //                 case sf::Event::MouseButtonPressed:
+    //             cout << "Button " << event.mouseButton.button << " @ "
+    //                         << sf::Mouse::getPosition(window).x << ", "
+    //                         << sf::Mouse::getPosition(window).y << "\n";
+    //             break;
+    //         }
+    //     }
+    // }
 
     // bool again = true;
     // string againt ;

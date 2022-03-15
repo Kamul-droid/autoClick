@@ -9,9 +9,7 @@
 #include <conio.h>
 #include "Task.hpp"
 #include "Action.hpp"
-#include<thread>
 using namespace std;
-
 
 
 
@@ -40,7 +38,7 @@ void Task::setPauseCode(bool code)
 }
 
 
-void Task::display(){
+void Task::display() {
     if (cycle.empty())
     {
         std::cout << " Nothing to display " << endl;
@@ -65,15 +63,14 @@ void Task::addAction()
     int time, wait, response;
     bool again = true;
 
-
-    while (again)
+    while (again) 
+    
     {
-        /* code */
+        
         std::cout << "Name of the action" << endl;
         std::cout << "----------------" << endl;
         std::cin >> actionName;
-        this->setName(actionName);
-
+        
         std::cout << "---------------------------------------------------------------------" << endl;
         std::cout << "Enter the parameters for the action " << this->getName() << endl;
         std::cout << "---------------------------------------------------------------------" << endl;
@@ -86,14 +83,14 @@ void Task::addAction()
 
         while (!control)
         {
-            std::cout << "Which Button click do you want to simulate ex:L or R ?" << endl;
+            std::cout << "Which Button click do you want to simulate ex: Left (L) or Right (R) ?" << endl;
 
-            std::cout << "-------------------->       <--------------------------" << endl;
-            std::cout << "You must enter either L or R " << endl;
-            std::cout << "--------------------><------><-------------------------" << endl;
+            std::cout << "        -------------------->       <--------------------------" << endl;
+            std::cout << "       You must enter either L or R " << endl;
+            std::cout << "        --------------------><------><-------------------------" << endl;
             std::cin >> buttonPress;
 
-            if (buttonPress == "L" || buttonPress == "R")
+            if (buttonPress == "L" || buttonPress == "l" || buttonPress == "R" || buttonPress == "r" )
             {
                 control = true;
             }
@@ -112,11 +109,20 @@ void Task::addAction()
         {
         case 1:
             /* code */
-            createUserInputPosition();
+            createUserInputPosition(posX, posY);
             break;
         case 2:
             /* code */
-            createMouseInputPosition( posX,  posY);
+            cout <<"Move your mouse cursor to the position then Enter 1 "<<endl;
+            std::cin.clear();
+            std::cin >> useranswer;
+            if (useranswer == 1)
+            {
+                /* code */
+               createMouseInputPosition( posX,  posY);
+            }
+            
+         
             break;
 
         default:
@@ -132,7 +138,7 @@ void Task::addAction()
         while (!control)
         {
             /* code */
-            std::cout << "Enter the delay before click in ms ?" << endl;
+            std::cout << "Enter time for click in ms  ?" << endl;
             std::cout << "------------------------------------" << endl;
             std::cin >> timeT;
             control = checkIntegerInput(timeT);
@@ -203,9 +209,9 @@ bool Task::checkIntegerInput(string str)
         return true;
 }
 
-void Task::createUserInputPosition(){
+void Task::createUserInputPosition(double &posX, double &posY){
    
-        double posX,posY;
+        
    
         bool control = false;
         do
@@ -277,20 +283,23 @@ void Task::createUserInputPosition(){
 
 }
 
+void Task::getMousePos(double &posX, double &posY){
+     POINT p;
+        GetCursorPos(&p);
+        posX = p.x;
+        posY = p.y;
+}
+
 void Task::createMouseInputPosition(double &posX, double &posY){
    
-    // double posX, posY;
-       
-    // posX = posY=-1;
+    
     bool hasPos = false;
     while (!hasPos)
     {
         /* code */
         std::cout << "This is the Cursor position on the screen " << endl;
-        POINT p;
-        GetCursorPos(&p);
-        posX = p.x;
-        posY = p.y;
+
+        getMousePos(posX,posY);
 
         if (posX != -1)
         {
@@ -304,10 +313,131 @@ void Task::createMouseInputPosition(double &posX, double &posY){
     
 }
 
+int Task::mouseEvent(int key){
+     return (GetAsyncKeyState(key) & 0x8000 != 0);
+}
+
 void Task::createTask()
 {   
-    cycle.clear();
-    addAction();
+    string answer, actionName, check, timeT, waitT;
+    bool ctrl,control;
+    int response;
+    double posX =-1, posY = -1;
+    string button;
+    int time, wait;
+   
+    cout << "How do want do configure the action ?"<<endl;
+    cout << "1) Enter the data myself "<<endl;
+    cout << "2) Get the position and mouse button automatically"<<endl;
+    cout << "   Enter your choice"<<endl;
+
+    cin.clear();
+    cin >> check;
+    ctrl = checkIntegerInput(answer);
+     while (!ctrl)
+    {
+        /* code */
+        std::cout << "Wrong input, Enter a correct response " << endl;
+        std::cin.clear();
+        std::cin >> check;
+        ctrl = checkIntegerInput(check);
+    }
+    response = stoi(check);
+
+    switch (response)
+    {
+        case 1:
+            cycle.clear(); 
+            addAction();
+            break;
+        case 2:
+            ctrl = false;
+            while (!ctrl)
+            {
+                cout << "Click on the mouse or Press F to stop the input"<<endl;
+
+                /* start of the input*/
+                if(mouseEvent(VK_LBUTTON)){
+
+                    getMousePos(posX,posY);
+                    button = "L";
+                    printf("%s\n","Click gauche");
+                }
+            
+                if(mouseEvent(VK_RBUTTON)){
+                    getMousePos(posX,posY);
+                    button = "R";
+                    printf("%s\n","Click Droit");
+                }
+
+        std::cout << "Name of the action" << endl;
+        std::cout << "----------------" << endl;
+        std::cin >> actionName;
+        
+        std::cout << "---------------------------------------------------------------------" << endl;
+        std::cout << "Enter the parameters for the action " << this->getName() << endl;
+        std::cout << "---------------------------------------------------------------------" << endl;
+
+
+        std::cout << "Enter time for click in ms ?" << endl;
+        std::cout << "------------------------------------" << endl;
+        std::cin >> timeT;
+        control = checkIntegerInput(timeT);
+
+        while (!control)
+        {
+            /* code */
+            std::cout << "Enter time for click in ms  ?" << endl;
+            std::cout << "------------------------------------" << endl;
+            std::cin >> timeT;
+            control = checkIntegerInput(timeT);
+        }
+        // convert input to int
+        time = stoi(timeT);
+
+        std::cout << "Enter the delay before next click in ms ?" << endl;
+        std::cout << "----------------------------------------" << endl;
+        std::cin >> waitT;
+
+        control = checkIntegerInput(waitT);
+
+        while (!control)
+        {
+
+            std::cout << "Enter the delay before next click in ms ?" << endl;
+            std::cout << "----------------------------------------" << endl;
+            std::cin >> waitT;
+            control = checkIntegerInput(waitT);
+        }
+
+        // convert input to int
+        wait = stoi(waitT);
+
+         Action item(actionName, posX, posY, time,wait, button);
+       
+        cycle.push_back(item);
+        // to process loop
+        actionLoop.push(item);
+        waitBeforeNextAction[item] = wait;
+
+            /* end of the input*/
+            cin.clear();
+            cin >> answer;
+
+            if (answer == "F"|| answer =="f")
+            {
+                ctrl = true;
+            }
+            
+        }
+        
+        
+        break;
+    
+    default:
+        break;
+    }
+
     
 }
 
@@ -355,11 +485,12 @@ void Task::miniInterAction(){
     std::cout << "" << endl;
     std::cout << "#################### WELCOME BACK ################## ?" << endl;
     std::cout << "  What do you want to do with your created task ?" << endl;
-    std::cout << "    -----------------------------------" << endl;
-    std::cout << "    --------> 1 <-- Run one time task" << endl;
-    std::cout << "    --------> 2 <-- Run until stop " << endl;
-    std::cout << "    -----> 3 <-- Run a certain amount of time" << endl;
+    std::cout << "    -------------------------------------------" << endl;
+    std::cout << "    --> 1 <-- Preview the task" << endl;
+    std::cout << "    --> 2 <-- Run until stop " << endl;
+    std::cout << "    --> 3 <-- Run a certain amount of time" << endl;
     std::cout << "    --> 4 <-- Add new action to the task to run " << endl;
+    
     
     std::cout << "     Enter your choice " << endl;
     std::cin.clear();
@@ -406,6 +537,7 @@ void Task::miniInterAction(){
         miniInterAction();
         
         break;
+    
      
     default:
         break;
@@ -413,14 +545,10 @@ void Task::miniInterAction(){
 
 }
 
-
-
 void Task::repeatTask()
 {
 
     /* default loop */
-    bool again = true;
-    int count = 200;
 
     while (!stopCode)
     {
@@ -434,18 +562,10 @@ void Task::repeatTask()
         Action::waitTime(waitBeforeNextAction[item]);
         
         interruptCode();
-    
-        // count--;
-        // if (count == 0)
-        // {
-        //     /* end of the loop*/
-        //     again = false;
-        // }
 
         
     }
 }
-
 
 void Task::repeatNTask()
 {
@@ -482,7 +602,6 @@ void Task::repeatNTask()
         interruptCode();
     }
 }
-
 
 void Task::duplicateAction(int pos){
 
@@ -746,6 +865,26 @@ void Task::interruptCode(){
         
 
 }
+
+std::vector<Action> Task::getCycle() const{
+    return this->cycle;
+}
+
+void Task::setCycle(vector<Action> cycl){
+    this->cycle.swap(cycl);  
+
+}
+
+void Task::setActionLoop(vector<Action> cycle){
+    queue<Action> empt;
+    this->actionLoop.swap(empt);
+    for (auto &&i : cycle)
+    {
+        this->actionLoop.push(i);
+    }
+    
+}
+
 
 Task::Task(string name) : taskName(name)
 {

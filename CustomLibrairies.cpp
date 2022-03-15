@@ -1,3 +1,6 @@
+#include"CustomLibrairies.hpp"
+#include"Task.hpp"
+#include"Action.hpp"
 #include <string>
 #include <iostream>
 #include<Windows.h>
@@ -9,42 +12,10 @@
 #include <vector>
 #include<map>
 #include<conio.h>
-#include "Action.hpp"
-#include"Task.hpp"
 #include <fstream>
 #include <sstream>
 
-
 using namespace std;
-
-
-bool stopCode = false;
-vector<Task> saveTaskContainer;
-vector <string> nameList ;
-
-int interaction ( Task newTask);
-string inputChoice( );
-void isEmptyContainer(vector<Task> &saveTaskContainer,Task &newTask);
-void saveTask(Task toSave);
-void saveTaskToFile(vector<Task> toSave);
-void loadTaskFromFile(string filename, vector<Task> &taskContainer);
-void loadTask(vector<Task> &saveTaskContainer);
-Task createTask();
-int findTaskPositionInContainer(vector<Task> Container, Task task);
-void updateNameList(vector<Task>saveTaskContainer,vector <string> &nameList);
-bool uniqueNameConstraint(vector<string> nameList, string name);
-
-
-
-
-int main(int argc, char const *argv[])
-{
-    Task newTask("S");
-   
-    interaction(newTask);
-    
-    return 0;
-}
 
 
 int interaction ( Task newTask ){
@@ -87,9 +58,11 @@ int interaction ( Task newTask ){
                 break;
 
             case 2:
+                /* code */
             
                 newTask = createTask();
-     
+                
+                
                 break;
             case 3:
 
@@ -280,17 +253,17 @@ void loadTaskFromFile(string filename, vector<Task> &taskContainer){
 
     if (file.is_open())
     {
-       
+        /* code */
         while (getline(file,line))
         {   
             row.clear();
-            
+            /* code */
             
             stringstream str(line);
-            
+            //cout << " line  "<<line;
             while (getline(str,info,','))
           
-               
+               //cout << " data "<<info;
                row.push_back(info);
                 
             container.push_back(row);
@@ -321,27 +294,27 @@ void loadTaskFromFile(string filename, vector<Task> &taskContainer){
         for (int j = 1; j < container[i].size(); j++)
         {
             task.setName(container[i][0]);
-           
+            //cout << "task name "<<task.getName() << endl;
+
             name = container[i][j];
-           
+            //cout << "name "<<name << endl;
             button = container[i][j+1];
-           
+            //cout << "button "<<button << endl;
             posX = stod(container[i][j+2]);
-          
+            //cout << posX << endl;
             posY = stod(container[i][j+3]);
-           
+            //cout << posY << endl;
             time = stoi(container[i][j+4]);
-          
+           // cout << time << endl;
             wait = stoi(container[i][j+5]);
-           
+            //cout << wait << endl;
             Action action(name,posX,posY,time,wait,button);
-           
+            //action.display() ;
             cycle.push_back(action);
             j+=5;
 
         }
         task.setCycle(cycle);
-        task.setActionLoop(cycle);
         taskContainer.push_back(task);
         
     }
@@ -438,5 +411,4 @@ bool uniqueNameConstraint(vector<string> nameList, string name){
     
 
 }
-
 

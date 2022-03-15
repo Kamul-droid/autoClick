@@ -3,6 +3,10 @@
         "iostream": "cpp",
         "string": "cpp",
         "xstring": "cpp",
-        "thread": "cpp"
-    }
+        "thread": "cpp",
+        "*.ipp": "cpp",
+        "vector": "cpp",
+        "xiosbase": "cpp"
+    },
+    "files.autoSave": "onFocusChange"
 }

@@ -67,15 +67,15 @@ void Action::rightClick(double x, double y, int time){
 }
 
 void Action::startAction(){
-    if (buttonClick=="L")
+    if (buttonClick=="L"||buttonClick=="l")
     {
-        //waitTime(timeToWait);
+        
         leftClick(posX,posY,time);
         display();
     }
-    else if (buttonClick=="R")
+    else if (buttonClick=="R"||buttonClick=="r")
     {
-        //waitTime(timeToWait);
+        
         rightClick(posX,posY,time);
         display();
     }
@@ -90,6 +90,22 @@ void Action::startAction(){
 const string& Action::getName(){
     return this->name;
 }
+const string& Action::getButton(){
+    return this->buttonClick;
+}
+const double& Action::getPosX(){
+    return this->posX;
+}
+const double& Action::getPosY(){
+    return this->posY;
+}
+const int& Action::getTime(){
+    return this->time;
+}
+const int& Action::getWaitTime(){
+    return this->timeToWait;
+}
+
 
 void Action::setName(string name){
     this->name = name;
@@ -124,8 +140,11 @@ void Action::setY(double y ){
 }
 
 void Action::display(){
-    cout << " Name: "<<name <<" Mouse button: "<<buttonClick <<" Screen position X: "<< posX <<" Y: "<< posY <<endl;
-    cout <<"Mouse time: " << time << " Wait time: " << timeToWait << endl;
+    cout << "\t Action name: "<<name <<endl;
+    cout<<"\t Mouse button: "<<buttonClick <<endl;
+    cout << "\t Screen position X: "<< posX <<" Y: "<< posY <<endl;
+    cout <<"\t Mouse time: " << time << endl;
+    cout <<"\t Wait time: " << timeToWait << endl;
     cout <<" "<<endl;
 }
 
@@ -157,6 +176,8 @@ void Action::waitTime(int time){
 Action::Action(string name,double screenPosX, double screenPosY, int time , int wait,string click): posX(screenPosX),posY(screenPosY),time(time),timeToWait(wait) ,buttonClick(click),name(name)
 {
     this->instanceCount++;
+   
+    
 }
 
 Action::~Action()

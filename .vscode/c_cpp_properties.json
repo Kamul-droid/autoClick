@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/boost_1_64_0/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -16,8 +17,14 @@
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-msvc-x64",
             "compilerArgs": [
-                "-User32.lib"
-            ]
+                "-User32.lib",
+                ""
+            ],
+            "browse": {
+                "path": [
+                    "C:\\Users\\kam\\Documents\\robotCliker\\autoClick\\boost_1_64_0"
+                ]
+            }
         }
     ],
     "version": 4
