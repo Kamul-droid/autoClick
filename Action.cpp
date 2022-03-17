@@ -80,9 +80,8 @@ void Action::startAction(){
         display();
     }
     else
-    {
         cout << "No button defined" <<endl;
-        //printf("hello");
+        
     }
     
 }

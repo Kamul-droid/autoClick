@@ -56,18 +56,18 @@ int interaction ( Task newTask ){
      while (repeat)
         {
             /* code */
-            cout << "####################### WELCOME ####################" << endl;
+            cout << "####################### WELCOME #########################" << endl;
 
-            cout << " ---------------What do you want to do ?------------" << endl;
-            cout << " ****************        Enter      ****************" << endl;
-            cout << " -> 1 <---------- load---------------" << endl;
-            cout << " -> 2 <-----------To create task--------------------" << endl;
-            cout << " -> 3 <-----------Start the task------------------" << endl;
-            cout << " -> 4 <-----------Rename the task-------------------" << endl;
-            cout << " -> 5 <-- --------Configure the task  " << endl;
-            cout << " -> 6 <---------- To exit the program---------------" << endl;
+            cout << " ---------------What do you want to do ?-----------------" << endl;
+            cout << " ****************        Enter      *********************" << endl;
+            cout << " -> 1 <---------- Load-----------------------------------" << endl;
+            cout << " -> 2 <-----------To create task-------------------------" << endl;
+            cout << " -> 3 <-----------Start the task-------------------------" << endl;
+            cout << " -> 4 <-----------Rename the task------------------------" << endl;
+            cout << " -> 5 <-- --------Configure the task---------------------" << endl;
+            cout << " -> 6 <-----------To Exit the program and Save the Task--" << endl;
             cout << "  Press -> Space <- to pause and -> F3 <-to Stop the task" << endl;
-            cout << "******************Enter your choice*****************" << endl;
+            cout << "******************Enter your choice**********************" << endl;
             
             
             temp = inputChoice();
@@ -389,6 +389,7 @@ Task createTask(){
     //record to nameList to ensure unique name later
     nameList.push_back(taskname);
     // Start creating action for the task
+    
     taskToExecute.createTask();
     saveTask(taskToExecute);
     taskToExecute.miniInterAction();

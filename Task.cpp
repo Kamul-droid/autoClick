@@ -9,6 +9,7 @@
 #include <conio.h>
 #include "Task.hpp"
 #include "Action.hpp"
+#include<ctime>
 using namespace std;
 
 
@@ -75,9 +76,6 @@ void Task::addAction()
         std::cout << "Enter the parameters for the action " << this->getName() << endl;
         std::cout << "---------------------------------------------------------------------" << endl;
 
-        // std::cout << "Which Button click do you want to simulate ex:L or R ?" <<endl;
-        // std::cout << "----------------" <<endl;
-        // std::cin >> buttonPress;
 
         bool control = false;
 
@@ -108,17 +106,17 @@ void Task::addAction()
         switch (useranswer)
         {
         case 1:
-            /* code */
+           /*                                     */
             createUserInputPosition(posX, posY);
             break;
         case 2:
-            /* code */
+           /*                                     */
             cout <<"Move your mouse cursor to the position then Enter 1 "<<endl;
             std::cin.clear();
             std::cin >> useranswer;
             if (useranswer == 1)
             {
-                /* code */
+               /* get position with mouse cursor   */
                createMouseInputPosition( posX,  posY);
             }
             
@@ -137,7 +135,7 @@ void Task::addAction()
 
         while (!control)
         {
-            /* code */
+           /* validate user input  */
             std::cout << "Enter time for click in ms  ?" << endl;
             std::cout << "------------------------------------" << endl;
             std::cin >> timeT;
@@ -179,12 +177,12 @@ void Task::addAction()
 
         if (response == 0)
         {
-            /* code */
+           /* terminate the loop  */
             again = false;
         }
         else if (response != 1 && response !=0)
         {
-            /* code */
+           /*                                     */
             again = false;
         }
         std::cin.clear();
@@ -229,18 +227,18 @@ void Task::createUserInputPosition(double &posX, double &posY){
             }
             else
             {
-                /* code */
+               /*                                     */
                 string dummy;
                 getline(std::cin, dummy);
                 if (dummy.find_first_not_of(" ") != string::npos)
                 {
-                    /* code */
+                   /*                                     */
                     control = false;
                 }
             }
             if (!control)
             {
-                /* code */
+               /*                                     */
                 std::cout << " Invalid double" << endl;
             }
 
@@ -261,18 +259,18 @@ void Task::createUserInputPosition(double &posX, double &posY){
             }
             else
             {
-                /* code */
+               /*                                     */
                 string dummy;
                 getline(std::cin, dummy);
                 if (dummy.find_first_not_of(" ") != string::npos)
                 {
-                    /* code */
+                   /*                                     */
                     control = false;
                 }
             }
             if (!control)
             {
-                /* code */
+               /*                                     */
                 std::cout << " Invalid double" << endl;
             }
 
@@ -296,7 +294,7 @@ void Task::createMouseInputPosition(double &posX, double &posY){
     bool hasPos = false;
     while (!hasPos)
     {
-        /* code */
+       /*                                     */
         std::cout << "This is the Cursor position on the screen " << endl;
 
         getMousePos(posX,posY);
@@ -314,17 +312,23 @@ void Task::createMouseInputPosition(double &posX, double &posY){
 }
 
 int Task::mouseEvent(int key){
-     return (GetAsyncKeyState(key) & 0x8000 != 0);
+     return (GetKeyState(key) & 0x8000 != 0);
 }
-
+                 
 void Task::createTask()
 {   
     string answer, actionName, check, timeT, waitT;
-    bool ctrl,control;
-    int response;
+    bool ctrl,control,ctrlL = false, ctrlP=false;
+    int response,count =0, countp=0;
     double posX =-1, posY = -1;
     string button;
-    int time, wait;
+    int timeP, wait;
+    time_t current_time, start_time, wtime;
+    vector<string> mouseClick;
+    vector<time_t> period;
+    vector<int> mousepress;
+    vector<double> Xpos;
+    vector<double> Ypos;
    
     cout << "How do want do configure the action ?"<<endl;
     cout << "1) Enter the data myself "<<endl;
@@ -336,7 +340,7 @@ void Task::createTask()
     ctrl = checkIntegerInput(answer);
      while (!ctrl)
     {
-        /* code */
+       /*                                     */
         std::cout << "Wrong input, Enter a correct response " << endl;
         std::cin.clear();
         std::cin >> check;
@@ -352,84 +356,176 @@ void Task::createTask()
             break;
         case 2:
             ctrl = false;
+            Sleep(2000);
+            cout << "start" <<endl;
+            control = false;
+            int pressTime;
             while (!ctrl)
             {
-                cout << "Click on the mouse or Press F to stop the input"<<endl;
-
+               
                 /* start of the input*/
-                if(mouseEvent(VK_LBUTTON)){
+                while (1)
+                {
+                   /*                                     */
+                    if( GetKeyState(VK_LBUTTON) & 0x8000){
+                       
+                    if (!control)
+                    {
+                       control = true;
+                       button = "L";
+                       time(&current_time);
+
+                    }
+                    //process invoke count in nanoseconde
+                        count ++;
+                    
+                    } 
+
+                    if ((GetKeyState(VK_LBUTTON) & 0x8000) == 0)
+                    {
+                        // conversion of button press in milliseconde
+                        pressTime = count/1000000;
+                    
+                        break;
+                    }
+                    
+                }
+                 //Right button input
+                while (1)
+                {
+                   /*                                     */
+                    if( GetKeyState(VK_RBUTTON) & 0x8000){
+                       
+                    if (!control)
+                    {
+                       control = true;
+                       button = "R";
+                       time(&current_time);
+
+
+                    }
+                    //process invoke time count in nanoseconde
+                        count ++;
+                    
+                    } 
+
+                    if ((GetKeyState(VK_RBUTTON) & 0x8000) == 0)
+                    {
+                        // conversion of button press in milliseconde
+                        pressTime = count/1000000;
+                
+                        break;
+                    }
+                    
+                }
+                 
+                
+                Sleep(150);
+                            
+                
+                if (control && button =="L")
+                {
+                       /*                                     */
+                    ctrlL = true;
+                    button = " ";
+
+                }
+
+                if ( control && button =="R")
+                {
+                       /*                                     */
+                    ctrlP = true;
+                    button = " ";
+
+                }
+              
+
+                
+                if (ctrlL)
+                {
+                   /*                                     */
+                    control = false;
+                    count = 0;
+                    cout << "Click on the mouse or Press Echap to stop the input"<<endl;
 
                     getMousePos(posX,posY);
-                    button = "L";
+                    Xpos.push_back(posX);
+                    Ypos.push_back(posY);
+                    period.push_back(current_time);
+                    mousepress.push_back(pressTime);
+                    mouseClick.push_back("L");
                     printf("%s\n","Click gauche");
+                    ctrlL = false;
+                   
                 }
-            
-                if(mouseEvent(VK_RBUTTON)){
+                        
+
+                if (ctrlP)
+                {
+                    cout << "Click on the mouse or Press Echap to stop the input"<<endl;
+
+                   /*                                     */
+                    control = false;
+                    count = 0;
+
                     getMousePos(posX,posY);
-                    button = "R";
+                    Xpos.push_back(posX);
+                    Ypos.push_back(posY);
+                    mouseClick.push_back("R");
+                    period.push_back(current_time);
+                    mousepress.push_back(pressTime);
+
+
                     printf("%s\n","Click Droit");
+                    ctrlP = false;
+                    
                 }
-
-        std::cout << "Name of the action" << endl;
-        std::cout << "----------------" << endl;
-        std::cin >> actionName;
-        
-        std::cout << "---------------------------------------------------------------------" << endl;
-        std::cout << "Enter the parameters for the action " << this->getName() << endl;
-        std::cout << "---------------------------------------------------------------------" << endl;
-
-
-        std::cout << "Enter time for click in ms ?" << endl;
-        std::cout << "------------------------------------" << endl;
-        std::cin >> timeT;
-        control = checkIntegerInput(timeT);
-
-        while (!control)
-        {
-            /* code */
-            std::cout << "Enter time for click in ms  ?" << endl;
-            std::cout << "------------------------------------" << endl;
-            std::cin >> timeT;
-            control = checkIntegerInput(timeT);
-        }
-        // convert input to int
-        time = stoi(timeT);
-
-        std::cout << "Enter the delay before next click in ms ?" << endl;
-        std::cout << "----------------------------------------" << endl;
-        std::cin >> waitT;
-
-        control = checkIntegerInput(waitT);
-
-        while (!control)
-        {
-
-            std::cout << "Enter the delay before next click in ms ?" << endl;
-            std::cout << "----------------------------------------" << endl;
-            std::cin >> waitT;
-            control = checkIntegerInput(waitT);
-        }
-
-        // convert input to int
-        wait = stoi(waitT);
-
-         Action item(actionName, posX, posY, time,wait, button);
-       
-        cycle.push_back(item);
-        // to process loop
-        actionLoop.push(item);
-        waitBeforeNextAction[item] = wait;
-
-            /* end of the input*/
-            cin.clear();
-            cin >> answer;
-
-            if (answer == "F"|| answer =="f")
-            {
-                ctrl = true;
-            }
+              
+                
+                
+                if (GetKeyState(VK_ESCAPE) & 0x8000)
+                {
+                   /*                                     */
+                    ctrl = true;
+                }
+              
             
-        }
+            }
+            if (ctrl)
+            {
+           /*                                     */
+            cycle.clear();
+            queue <Action> emp;
+            actionLoop.swap(emp);
+          
+                for (int i = 0; i < mouseClick.size(); i++)
+                {
+                   /*                                     */
+                    button = mouseClick[i];
+                    
+                    posX = Xpos[i];
+                    posY = Ypos[i];
+                    timeP = mousepress[i];
+                    if (i+1 < mouseClick.size())
+                    {
+                    wait = static_cast <int > (period[i+1]-period[i]);
+                       /*                                     */
+                    wait *=1000;
+                    }else{wait =0;}
+                    actionName = "auto"+to_string( i);
+
+                    Action item(actionName, posX, posY, timeP,wait, button);
+                    cycle.push_back(item);
+                    // to process loop
+                    actionLoop.push(item);
+                    waitBeforeNextAction[item] = wait;
+                }
+                
+
+
+        
+            }
+        
         
         
         break;
@@ -445,11 +541,13 @@ void Task::start()
 {
     if (!cycle.empty())
     {
-        /* code */
+       /*                                     */
         for (auto &&i : cycle)
         {
             i.startAction();
-            Action::waitTime(waitBeforeNextAction[i]);
+            i.display();
+           
+            Action::waitTime(i.getWaitTime());
       
 
             if (stopCode)
@@ -500,7 +598,7 @@ void Task::miniInterAction(){
     ctrl = checkIntegerInput(check);
     while (!ctrl)
     {
-        /* code */
+       /*                                     */
         std::cout << "Wrong input, Enter a correct response " << endl;
         std::cin.clear();
         std::cin >> check;
@@ -512,13 +610,13 @@ void Task::miniInterAction(){
     switch (useranswer)
     {
     case 1:
-        /* code */
+       /*                                     */
         setStopCode(false);
         setPauseCode(false);
         start();
         break;
     case 2:
-        /* code */
+       /*                                     */
        
         setStopCode(false);
         setPauseCode(false);
@@ -559,7 +657,7 @@ void Task::repeatTask()
         actionLoop.pop();
         // Call the event
         item.startAction();
-        Action::waitTime(waitBeforeNextAction[item]);
+        Action::waitTime(item.getWaitTime());
         
         interruptCode();
 
@@ -580,7 +678,7 @@ void Task::repeatNTask()
 
     while (!control)
     {
-        /* code */
+       /*                                     */
         std::cout << "Enter a valid integer ?" << endl;
         std::cout << "-----------------------" << endl;
         std::cin >> ctrl;
@@ -598,7 +696,7 @@ void Task::repeatNTask()
         actionLoop.pop();
         // Call the event
         item.startAction();
-        Action::waitTime(waitBeforeNextAction[item]);
+        Action::waitTime(item.getWaitTime());
         interruptCode();
     }
 }
@@ -623,7 +721,7 @@ void Task::duplicateAction(int pos){
     switch (answer)
     {
     case 1:
-        /* code */
+       /*                                     */
        
         cycle.push_back(selected);
         std::cout << "               "<<endl;
@@ -634,7 +732,7 @@ void Task::duplicateAction(int pos){
         
         break;
     case 2:
-        /* code */
+       /*                                     */
         
         std::cout <<" "<<endl;
         std::cout << "Enter the position of insertion" << endl;
@@ -642,7 +740,7 @@ void Task::duplicateAction(int pos){
 
         while (answer > cycle.size())
         {
-            /* code */
+           /*                                     */
             std::cout <<" "<<endl;
             std::cout << "Out of range position" << endl;
             answer = stoi(inputChoice());
@@ -671,10 +769,10 @@ void Task:: insertAction(int select, int answer){
 
     for ( i = cycle.begin(); i < cycle.end(); i++)
     {
-        /* code */
+       /*                                     */
         if (count==answer)
         {
-            /* code */
+           /*                                     */
             cycle.insert(i,selected);
             count =0;
             break;
@@ -695,7 +793,7 @@ string Task::inputChoice(){
 
     while (!ctrl)
     {
-        /* code */
+       /*                                     */
         std::cout << " Wrong choice, Reenter your choice" << endl;
         std::cin.clear();
         std::cin >> check;
@@ -720,7 +818,7 @@ void Task::configAction(int pos){
 
     while (!again)
     {
-            /* code */
+           /*                                     */
         std::cout << "what do you want to change" << endl;
         std::cout << " 1 ) Name" <<endl;
         std::cout << " 2 ) Button" <<endl;
@@ -737,7 +835,7 @@ void Task::configAction(int pos){
 
         while (!ctr)
         {
-            /* code */
+           /*                                     */
             std::cout << " Wrong choice, Reenter your choice" << endl;
             std::cin.clear();
             std::cin >> check;
@@ -749,28 +847,28 @@ void Task::configAction(int pos){
         switch (answer)
         {
         case 1:
-            /* code */
+           /*                                     */
             std::cout << "Enter the new name" <<endl;
             std::cin.clear();
             std::cin >> name;
             old.setName(name);
             break;
         case 2:
-            /* code */
+           /*                                     */
             std::cout << "Enter the new button -> R or L <- " <<endl;
             std::cin.clear();
             std::cin >> button;
             old.setButton(button);
             break;
         case 3:
-            /* code */
+           /*                                     */
             std::cout << "Enter mouse time in ms <- " <<endl;
             std::cin.clear();
             std::cin >> answer;
             old.setTime(answer);
             break;
         case 4:
-            /* code */
+           /*                                     */
             std::cout << "Enter wait time in ms <- " <<endl;
             std::cin.clear();
             std::cin >> answer;
@@ -778,14 +876,14 @@ void Task::configAction(int pos){
             waitBeforeNextAction[old] = answer;
             break;
         case 5:
-            /* code */
+           /*                                     */
             std::cout << "Enter the new X position <- " <<endl;
             std::cin.clear();
             std::cin >> x;
             old.setX(x);
             break;
         case 6:
-            /* code */
+           /*                                     */
             std::cout << "Enter the new Y position <- " <<endl;
             std::cin.clear();
             std::cin >> y;
@@ -855,7 +953,7 @@ void Task::interruptCode(){
 
         if (pauseCode)
         {
-            /* code */
+           /*                                     */
             std::cout <<"Press a Key and Enter to resume"<<endl;
             std::cin.clear();
             std::cin.get();
